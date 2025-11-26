@@ -1,0 +1,121 @@
+﻿@model AgateApp.Models.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Project Dashboard";
+}
+
+<div class="container-fluid">
+    <h1 class="mb-4">Project Dashboard</h1>
+
+    <div class="row">
+        <!-- COLUMN 1: CLIENTS -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Step 1: Select Client</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    @foreach (var client in Model.Clients)
+                    {
+                        // Check if this client is selected to highlight it
+                        string activeClass = (client.Id == Model.SelectedClientId) ? "active" : "";
+
+                        // Clicking this links to: /Dashboard?clientId=5
+                        <a asp-action="Index"
+                           asp-route-clientId="@client.Id"
+                           class="list-group-item list-group-item-action @activeClass">
+                            @client.CompanyName
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- COLUMN 2: CAMPAIGNS -->
+        <div class="col-md-4">
+            @if (Model.SelectedClientId.HasValue)
+            {
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">Step 2: Select Campaign</h5>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        @if (Model.Campaigns.Count == 0)
+                        {
+                            <div class="p-3 text-muted">No campaigns found for this client.</div>
+                        }
+
+                        @foreach (var campaign in Model.Campaigns)
+                        {
+                            string activeClass = (campaign.Id == Model.SelectedCampaignId) ? "active" : "";
+
+                            // Clicking this keeps clientId but adds campaignId: /Dashboard?clientId=5&campaignId=10
+                            <a asp-action="Index"
+                               asp-route-clientId="@Model.SelectedClientId"
+                               asp-route-campaignId="@campaign.Id"
+                               class="list-group-item list-group-item-action @activeClass">
+                                @campaign.Title
+                                <br />
+                                <small>Status: @campaign.Status</small>
+                            </a>
+                        }
+                    </div>
+                    <div class="card-body">
+                        <a asp-controller="Campaigns" asp-action="Create" class="btn btn-sm btn-outline-success w-100">+ New Campaign</a>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info">Please select a client to see campaigns.</div>
+            }
+        </div>
+
+        <!-- COLUMN 3: ADVERTS -->
+        <div class="col-md-4">
+            @if (Model.SelectedCampaignId.HasValue)
+            {
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">Step 3: Adverts</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.Adverts.Count == 0)
+                        {
+                            <p class="text-muted">No adverts found for this campaign.</p>
+                        }
+                        else
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-sm table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Advert Title</th>
+                                            <th>Media</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var advert in Model.Adverts)
+                                        {
+                                            <tr>
+                                                <td>@advert.Title</td>
+                                                <td>@advert.MediaChannel</td>
+                                                <td>@advert.ProductionStatus</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        <a asp-controller="Adverts" asp-action="Create" class="btn btn-sm btn-outline-info w-100 mt-2">+ New Advert</a>
+                    </div>
+                </div>
+            }
+            else if (Model.SelectedClientId.HasValue)
+            {
+                <div class="alert alert-secondary">Select a campaign to see details.</div>
+            }
+        </div>
+    </div>
+</div>
