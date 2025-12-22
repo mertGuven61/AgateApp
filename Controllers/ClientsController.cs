@@ -1,17 +1,20 @@
+using AgateApp.Data;
+using AgateApp.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using AgateApp.Data;
-using AgateApp.Models;
 
 namespace AgateApp.Controllers
 {
-    public class ClientsController : Controller
+	[Authorize(Roles = "Admin,ClientContact")]
+	public class ClientsController : Controller
     {
+
         private readonly AgateDbContext _context;
 
         public ClientsController(AgateDbContext context)

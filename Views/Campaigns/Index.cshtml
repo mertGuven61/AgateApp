@@ -1,95 +1,67 @@
 @model IEnumerable<AgateApp.Models.Campaign>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Campaigns";
 }
 
 <h1>Campaigns</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <!-- Sadece Yöneticiler yeni kampanya oluþturabilir -->
+    @if (User.IsInRole("Admin") || User.IsInRole("CampaignManager"))
+    {
+        <a asp-action="Create" class="btn btn-primary">Create New</a>
+    }
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PlannedStartDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PlannedFinishDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ActualFinishDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EstimatedCost)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Budget)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ActualCost)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AmountPaid)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DatePaid)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Client)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PlannedStartDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PlannedFinishDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ActualFinishDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EstimatedCost)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Budget)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ActualCost)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AmountPaid)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DatePaid)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Client.CompanyName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Title)</th>
+                <th>@Html.DisplayNameFor(model => model.Client)</th>
+                <th>Dates</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Client.CompanyName)
+                    </td>
+                    <td>
+                        <small>
+                            @item.PlannedStartDate.ToShortDateString() -
+                            @item.PlannedFinishDate.ToShortDateString()
+                        </small>
+                    </td>
+                    <td>
+                        <span class="badge bg-info text-dark">@item.Status</span>
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info">Details</a>
+
+                        <!-- YÖNETÝCÝ ÖZEL MENÜSÜ -->
+                        @if (User.IsInRole("Admin") || User.IsInRole("CampaignManager"))
+                        {
+                            <!-- Personel Atama Butonu -->
+                            <a asp-action="AssignStaff" asp-route-id="@item.Id" class="btn btn-sm btn-warning">
+                                <i class="bi bi-people-fill"></i> Assign Staff
+                            </a>
+
+                            <!-- Düzenleme ve Silme -->
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

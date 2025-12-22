@@ -14,7 +14,7 @@ namespace AgateApp.Models
 		public string AddressLine1 { get; set; }
 
 		[Display(Name = "Address Line 2")]
-		public string AddressLine2 { get; set; }
+		public string? AddressLine2 { get; set; }
 
 		public string City { get; set; }
 
@@ -25,9 +25,11 @@ namespace AgateApp.Models
 		public string ContactPersonName { get; set; }
 
 		[EmailAddress]
+		[Display(Name = "Contact Email")]
 		public string ContactEmail { get; set; }
 
 		[Phone]
+		[Display(Name = "Phone Number")]
 		public string PhoneNumber { get; set; }
 
 		public List<Campaign> Campaigns { get; set; } = new List<Campaign>();

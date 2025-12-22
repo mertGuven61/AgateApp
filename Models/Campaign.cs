@@ -34,12 +34,12 @@ namespace AgateApp.Models
 		[Display(Name = "Actual Cost")]
 		[Column(TypeName = "decimal(18,2)")]
 		[DataType(DataType.Currency)]
-		public decimal ActualCost { get; set; }
+		public decimal? ActualCost { get; set; }
 
 		[Display(Name = "Amount Paid")]
 		[Column(TypeName = "decimal(18,2)")]
 		[DataType(DataType.Currency)]
-		public decimal AmountPaid { get; set; }
+		public decimal? AmountPaid { get; set; }
 
 		[Display(Name = "Date Paid")]
 		[DataType(DataType.Date)]

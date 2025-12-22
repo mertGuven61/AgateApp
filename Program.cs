@@ -1,23 +1,40 @@
 using AgateApp.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
+// 1. Veritabaný Baðlantýsý
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+	?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
-//Database connection init
 builder.Services.AddDbContext<AgateDbContext>(options =>
-	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+	options.UseSqlServer(connectionString));
+
+// 2. Identity (Kimlik) Servisinin Eklenmesi (MANUEL EKLEME)
+// Admin ve Staff rolleri olacaðý için .AddRoles<IdentityRole>() ekliyoruz.
+builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+{
+	// Þifre kurallarýný basitleþtiriyoruz (Test kolaylýðý için)
+	options.SignIn.RequireConfirmedAccount = false;
+	options.Password.RequireDigit = false;
+	options.Password.RequireLowercase = false;
+	options.Password.RequireNonAlphanumeric = false;
+	options.Password.RequireUppercase = false;
+	options.Password.RequiredLength = 3; // En az 3 karakter þifre
+})
+	.AddRoles<IdentityRole>() // Rolleri aktif et
+	.AddEntityFrameworkStores<AgateDbContext>();
+
+builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+	app.UseExceptionHandler("/Home/Error");
+	app.UseHsts();
 }
 
 app.UseHttpsRedirection();
@@ -25,10 +42,32 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization();
+// 3. Kimlik Doðrulama Sýrasý (Önemli!)
+app.UseAuthentication(); // Önce: Kimsin?
+app.UseAuthorization();  // Sonra: Yetkin var mý?
 
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+	name: "default",
+	pattern: "{controller=Dashboard}/{action=Index}/{id?}"); // Açýlýþ sayfasý Dashboard
+
+app.MapRazorPages(); // Identity sayfalarý (Login/Register) için gerekli
+
+// --- BAÞLANGIÇ VERÝLERÝNÝ (Admin/Staff) YÜKLEME ---
+// Bu kýsým veritabanýnda Admin kullanýcýsý yoksa oluþturur
+using (var scope = app.Services.CreateScope())
+{
+	var services = scope.ServiceProvider;
+	try
+	{
+		// Birazdan oluþturacaðýmýz RoleInitializer sýnýfýný çaðýrýyoruz
+		await AgateApp.Data.RoleInitializer.InitializeAsync(services);
+	}
+	catch (Exception ex)
+	{
+		var logger = services.GetRequiredService<ILogger<Program>>();
+		logger.LogError(ex, "An error occurred while seeding the database.");
+	}
+}
+// -------------------------------------
 
 app.Run();

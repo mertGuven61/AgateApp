@@ -1,0 +1,71 @@
+﻿@model AgateApp.Models.Campaign
+
+@{
+    ViewData["Title"] = "Record Payment";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0"><i class="bi bi-cash-coin"></i> Record Payment</h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="UpdatePayment">
+                    <input type="hidden" asp-for="Id" />
+
+                    <!-- BİLGİ ALANLARI (READ ONLY) -->
+                    <div class="alert alert-light border">
+                        <dl class="row mb-0">
+                            <dt class="col-sm-4">Client:</dt>
+                            <dd class="col-sm-8">@Model.Client?.CompanyName</dd>
+
+                            <dt class="col-sm-4">Campaign:</dt>
+                            <dd class="col-sm-8">@Model.Title</dd>
+
+                            <dt class="col-sm-4">Budget:</dt>
+                            <dd class="col-sm-8">@Model.Budget.ToString("C")</dd>
+
+                            <dt class="col-sm-4 text-primary">Actual Cost:</dt>
+                            <dd class="col-sm-8 text-primary fw-bold">
+                                @Model.ActualCost.GetValueOrDefault().ToString("C")
+                            </dd>
+                        </dl>
+                    </div>
+
+                    <hr />
+
+                    <!-- DÜZENLENEBİLİR ALANLAR -->
+                    <div class="form-group mb-3">
+                        <label asp-for="AmountPaid" class="control-label fw-bold">Total Amount Paid</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input asp-for="AmountPaid" class="form-control form-control-lg" />
+                        </div>
+                        <span asp-validation-for="AmountPaid" class="text-danger"></span>
+                        <small class="text-muted">Enter the total sum received from client so far.</small>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label asp-for="DatePaid" class="control-label fw-bold">Last Payment Date</label>
+                        <input asp-for="DatePaid" class="form-control" type="date" />
+                        <span asp-validation-for="DatePaid" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <i class="bi bi-check-circle"></i> Save Payment Record
+                        </button>
+                        <a asp-controller="Dashboard" asp-action="Index" asp-route-clientId="@Model.ClientId" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -30,5 +30,7 @@ namespace AgateApp.Models
 		[Display(Name = "Campaign")]
 		public int CampaignId { get; set; }
 		public Campaign? Campaign { get; set; }
+
+		public virtual ICollection<AdvertNote> Notes { get; set; } = new List<AdvertNote>();
 	}
 }

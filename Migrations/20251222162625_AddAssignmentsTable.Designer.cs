@@ -4,6 +4,7 @@ using AgateApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AgateApp.Migrations
 {
     [DbContext(typeof(AgateDbContext))]
-    partial class AgateDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251222162625_AddAssignmentsTable")]
+    partial class AddAssignmentsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,35 +24,6 @@ namespace AgateApp.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("AdvertNote", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AdvertId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("AuthorName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("NoteText")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AdvertId");
-
-                    b.ToTable("AdvertNotes");
-                });
 
             modelBuilder.Entity("AgateApp.Models.Advert", b =>
                 {
@@ -408,17 +382,6 @@ namespace AgateApp.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("AdvertNote", b =>
-                {
-                    b.HasOne("AgateApp.Models.Advert", "Advert")
-                        .WithMany("Notes")
-                        .HasForeignKey("AdvertId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Advert");
-                });
-
             modelBuilder.Entity("AgateApp.Models.Advert", b =>
                 {
                     b.HasOne("AgateApp.Models.Campaign", "Campaign")
@@ -501,11 +464,6 @@ namespace AgateApp.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("AgateApp.Models.Advert", b =>
-                {
-                    b.Navigation("Notes");
                 });
 
             modelBuilder.Entity("AgateApp.Models.Campaign", b =>

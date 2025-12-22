@@ -19,6 +19,7 @@ namespace AgateApp.Controllers
             _context = context;
         }
 
+
         // GET: Adverts
         public async Task<IActionResult> Index()
         {
@@ -26,27 +27,47 @@ namespace AgateApp.Controllers
             return View(await agateDbContext.ToListAsync());
         }
 
-        // GET: Adverts/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+		public async Task<IActionResult> Details(int? id)
+		{
+			if (id == null) return NotFound();
 
-            var advert = await _context.Adverts
-                .Include(a => a.Campaign)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (advert == null)
-            {
-                return NotFound();
-            }
+			var advert = await _context.Adverts
+				.Include(a => a.Campaign) // Varsa
+				.Include(a => a.Notes)    // <-- BUNU MUTLAKA EKLEYÝN
+				.FirstOrDefaultAsync(m => m.Id == id);
 
-            return View(advert);
-        }
+			if (advert == null) return NotFound();
 
-        // GET: Adverts/Create
-        public IActionResult Create(int? campaignId)
+			// Notlarý tarihe göre tersten sýralayalým (en yeni en üstte)
+			advert.Notes = advert.Notes.OrderByDescending(n => n.CreatedAt).ToList();
+
+			return View(advert);
+		}
+
+		// Yeni Metot: Not Ekleme
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> AddNote(int advertId, string noteText)
+		{
+			if (!string.IsNullOrWhiteSpace(noteText))
+			{
+				var note = new AdvertNote
+				{
+					AdvertId = advertId,
+					NoteText = noteText,
+					AuthorName = User.Identity.Name ?? "Unknown Staff", // Giriþ yapan kullanýcý
+					CreatedAt = DateTime.Now
+				};
+
+				_context.Add(note);
+				await _context.SaveChangesAsync();
+			}
+
+			return RedirectToAction(nameof(Details), new { id = advertId });
+		}
+
+		// GET: Adverts/Create
+		public IActionResult Create(int? campaignId)
         {
             if (campaignId.HasValue)
             {
@@ -168,6 +189,7 @@ namespace AgateApp.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
 
         private bool AdvertExists(int id)
         {
