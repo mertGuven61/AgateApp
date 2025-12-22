@@ -46,9 +46,22 @@ namespace AgateApp.Controllers
         }
 
         // GET: Adverts/Create
-        public IActionResult Create()
+        public IActionResult Create(int? campaignId)
         {
-            ViewData["CampaignId"] = new SelectList(_context.Campaigns, "Id", "Title");
+            if (campaignId.HasValue)
+            {
+                ViewBag.PreSelectedCampaignId = campaignId;
+
+                // CampaignId for return to dashboard
+                var campaign = _context.Campaigns.FirstOrDefault(c => c.Id == campaignId);
+                if (campaign != null)
+                {
+                    ViewBag.CampaignTitle = campaign.Title;
+                    ViewBag.RelatedClientId = campaign.ClientId;
+                }
+            }
+
+            ViewData["CampaignId"] = new SelectList(_context.Campaigns, "Id", "Title", campaignId);
             return View();
         }
 

@@ -61,7 +61,12 @@
                         }
                     </div>
                     <div class="card-body">
-                        <a asp-controller="Campaigns" asp-action="Create" class="btn btn-sm btn-outline-success w-100">+ New Campaign</a>
+                        <a asp-controller="Campaigns"
+                           asp-action="Create"
+                           asp-route-clientId="@Model.SelectedClientId"
+                           class="btn btn-sm btn-outline-success w-100 ">
+                            + New Campaign for Selected Client
+                        </a>
                     </div>
                 </div>
             }
@@ -108,7 +113,12 @@
                                 </table>
                             </div>
                         }
-                        <a asp-controller="Adverts" asp-action="Create" class="btn btn-sm btn-outline-info w-100 mt-2">+ New Advert</a>
+                        <a asp-controller="Adverts"
+                           asp-action="Create"
+                           asp-route-campaignId="@Model.SelectedCampaignId"
+                           class="btn btn-sm btn-outline-info w-100">
+                            + New Advert for Selected Campaign
+                        </a>
                     </div>
                 </div>
             }

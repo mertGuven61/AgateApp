@@ -46,9 +46,20 @@ namespace AgateApp.Controllers
         }
 
         // GET: Campaigns/Create
-        public IActionResult Create()
+        public IActionResult Create(int? clientId)
         {
-            ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "CompanyName");
+            if (clientId.HasValue)
+            {
+                ViewBag.PreSelectedClientId = clientId;
+
+                var client = _context.Clients.FirstOrDefault(c => c.Id == clientId);
+                if (client != null)
+                {
+                    ViewBag.ClientName = client.CompanyName;
+                }
+            }
+
+            ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "CompanyName", clientId);
             return View();
         }
 
