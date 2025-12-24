@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,16 +7,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AgateApp.Data;
 using AgateApp.Models;
+using AgateApp.Services;
 
 namespace AgateApp.Controllers
 {
     public class AdvertsController : Controller
     {
         private readonly AgateDbContext _context;
+        private readonly GroqService _groqService;
 
-        public AdvertsController(AgateDbContext context)
+        public AdvertsController(AgateDbContext context, GroqService groqService)
         {
             _context = context;
+            _groqService = groqService;
         }
 
 
@@ -27,47 +30,77 @@ namespace AgateApp.Controllers
             return View(await agateDbContext.ToListAsync());
         }
 
-		public async Task<IActionResult> Details(int? id)
-		{
-			if (id == null) return NotFound();
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null) return NotFound();
 
-			var advert = await _context.Adverts
-				.Include(a => a.Campaign) // Varsa
-				.Include(a => a.Notes)    // <-- BUNU MUTLAKA EKLEYÝN
-				.FirstOrDefaultAsync(m => m.Id == id);
+            var advert = await _context.Adverts
+                .Include(a => a.Campaign) // Varsa
+                .Include(a => a.Notes)    // <-- BUNU MUTLAKA EKLEYï¿½N
+                .FirstOrDefaultAsync(m => m.Id == id);
 
-			if (advert == null) return NotFound();
+            if (advert == null) return NotFound();
 
-			// Notlarý tarihe göre tersten sýralayalým (en yeni en üstte)
-			advert.Notes = advert.Notes.OrderByDescending(n => n.CreatedAt).ToList();
+            // Notlarï¿½ tarihe gï¿½re tersten sï¿½ralayalï¿½m (en yeni en ï¿½stte)
+            advert.Notes = advert.Notes.OrderByDescending(n => n.CreatedAt).ToList();
 
-			return View(advert);
-		}
+            return View(advert);
+        }
 
-		// Yeni Metot: Not Ekleme
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> AddNote(int advertId, string noteText)
-		{
-			if (!string.IsNullOrWhiteSpace(noteText))
-			{
-				var note = new AdvertNote
-				{
-					AdvertId = advertId,
-					NoteText = noteText,
-					AuthorName = User.Identity.Name ?? "Unknown Staff", // Giriþ yapan kullanýcý
-					CreatedAt = DateTime.Now
-				};
+        // Yeni Metot: Not Ekleme
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddNote(int advertId, string noteText)
+        {
+            if (!string.IsNullOrWhiteSpace(noteText))
+            {
+                var note = new AdvertNote
+                {
+                    AdvertId = advertId,
+                    NoteText = noteText,
+                    AuthorName = User.Identity.Name ?? "Unknown Staff", // Giriï¿½ yapan kullanï¿½cï¿½
+                    CreatedAt = DateTime.Now
+                };
 
-				_context.Add(note);
-				await _context.SaveChangesAsync();
-			}
+                _context.Add(note);
+                await _context.SaveChangesAsync();
+            }
 
-			return RedirectToAction(nameof(Details), new { id = advertId });
-		}
+            return RedirectToAction(nameof(Details), new { id = advertId });
+        }
 
-		// GET: Adverts/Create
-		public IActionResult Create(int? campaignId)
+        // AI ile AÃ§Ä±klama OluÅŸturma
+        [HttpPost]
+        public async Task<IActionResult> GenerateAIDescription([FromBody] GenerateDescriptionRequest request)
+        {
+            if (request == null || request.AdvertId <= 0)
+            {
+                return Json(new { success = false, message = "GeÃ§ersiz reklam ID." });
+            }
+
+            var advert = await _context.Adverts
+                .Include(a => a.Campaign)
+                .FirstOrDefaultAsync(a => a.Id == request.AdvertId);
+
+            if (advert == null)
+            {
+                return Json(new { success = false, message = $"Reklam bulunamadÄ±. ID: {request.AdvertId}" });
+            }
+
+            try
+            {
+                // Groq kullan (Ã‡ok hÄ±zlÄ±, gÃ¼venilir ve Ã¼cretsiz!)
+                var description = await _groqService.GenerateAdvertDescriptionAsync(advert);
+                return Json(new { success = true, description = description });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"Hata: {ex.Message}" });
+            }
+        }
+
+        // GET: Adverts/Create
+        public IActionResult Create(int? campaignId)
         {
             if (campaignId.HasValue)
             {
@@ -195,5 +228,11 @@ namespace AgateApp.Controllers
         {
             return _context.Adverts.Any(e => e.Id == id);
         }
+    }
+
+    // Request model for AI description generation
+    public class GenerateDescriptionRequest
+    {
+        public int AdvertId { get; set; }
     }
 }

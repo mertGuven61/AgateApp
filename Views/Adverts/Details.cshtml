@@ -89,22 +89,32 @@
 
                 @if (User.IsInRole("Admin") || User.IsInRole("CampaignManager") || User.IsInRole("Staff"))
                 {
-                    <form asp-action="AddNote" method="post" class="mb-3">
+                    <form asp-action="AddNote" method="post" class="mb-3" id="noteForm">
                         <input type="hidden" name="advertId" value="@Model.Id" />
 
                         <div class="mb-2">
                             <textarea name="noteText"
-                                      class="form-control"
-                                      rows="3"
-                                      placeholder="Write a note regarding this advert..."
-                                      required></textarea>
+                                  id="noteText"
+                                  class="form-control"
+                                  rows="3"
+                                  placeholder="Write a note regarding this advert..."
+                                  required></textarea>
                         </div>
 
-                        <div class="d-flex justify-content-end">
+                        <div class="d-flex justify-content-end gap-2">
                             <button class="btn btn-primary btn-sm" type="submit">
                                 <i class="bi bi-send"></i> Add Note
                             </button>
+
+                            <!-- 1. dosyadaki AI Generate butonu -->
+                            <button class="btn btn-info btn-sm" type="button" id="generateAIBtn" onclick="generateAIDescription(@Model.Id)">
+                                <i class="bi bi-stars"></i> AI Generate
+                            </button>
                         </div>
+
+                        <small class="text-muted d-block mt-2">
+                            <i class="bi bi-info-circle"></i> AI Generate butonuna tıklayarak reklam bilgilerine göre otomatik açıklama oluşturabilirsiniz.
+                        </small>
                     </form>
 
                     <hr class="my-3" />
@@ -143,3 +153,70 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        function generateAIDescription(advertId) {
+            const btn = document.getElementById('generateAIBtn');
+            const textarea = document.getElementById('noteText');
+            const originalText = btn.innerHTML;
+
+            // Butonu devre dışı bırak ve loading göster
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Generating...';
+
+            fetch('/Adverts/GenerateAIDescription', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ advertId: advertId })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        throw new Error(`HTTP ${response.status}: ${text}`);
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    if (data.description && data.description.trim().length > 0) {
+                        textarea.value = data.description;
+                        showMessage('AI açıklama başarıyla oluşturuldu!', 'success');
+                    } else {
+                        showMessage('AI açıklama oluşturuldu ancak içerik boş.', 'warning');
+                    }
+                } else {
+                    showMessage(data.message || 'Bir hata oluştu.', 'danger');
+                }
+            })
+            .catch(error => {
+                showMessage('Bir hata oluştu: ' + error.message, 'danger');
+            })
+            .finally(() => {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            });
+        }
+
+        function showMessage(message, type) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show mt-2`;
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+
+            const form = document.getElementById('noteForm');
+            if (form) {
+                form.parentNode.insertBefore(alertDiv, form.nextSibling);
+            }
+
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        }
+    </script>
+}
