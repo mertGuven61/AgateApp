@@ -28,27 +28,9 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 
 builder.Services.AddControllersWithViews();
 
-<<<<<<< HEAD
-builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
-
-builder.Services.AddControllersWithViews()
-	.AddViewLocalization()
-	.AddDataAnnotationsLocalization();
-
-
-var supportedCultures = new[] { "en-US", "tr-TR" };
-var localizationOptions = new RequestLocalizationOptions()
-	.SetDefaultCulture("tr-TR") // Varsay�lan dil
-	.AddSupportedCultures(supportedCultures)
-	.AddSupportedUICultures(supportedCultures);
-
-
-
-=======
 // Groq API Servisi (En hızlı ve güvenilir)
 builder.Services.AddHttpClient<AgateApp.Services.GroqService>();
 builder.Services.AddScoped<AgateApp.Services.GroqService>();
->>>>>>> dc671e97b1bd370e7fd3d4ae8b604e88197d8233
 
 var app = builder.Build();
 
@@ -64,16 +46,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-<<<<<<< HEAD
-app.UseRequestLocalization(localizationOptions);
 // 3. Kimlik Do�rulama S�ras� (�nemli!)
 app.UseAuthentication(); // �nce: Kimsin?
 app.UseAuthorization();  // Sonra: Yetkin var m�?
-=======
-// 3. Kimlik Do�rulama S�ras� (�nemli!)
-app.UseAuthentication(); // �nce: Kimsin?
-app.UseAuthorization();  // Sonra: Yetkin var m�?
->>>>>>> dc671e97b1bd370e7fd3d4ae8b604e88197d8233
 
 app.MapControllerRoute(
     name: "default",

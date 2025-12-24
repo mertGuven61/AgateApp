@@ -22,8 +22,8 @@ html {
 
 /* --- Minimal / Light theme --- */
 :root {
-    --bg: #f7f7f8;
-    --card: #ffffff;
+    --bg: #f2f4f8; /* daha az beyaz */
+    --card: #fbfcfe; /* kartlar saf beyaz deðil */
     --text: #111827;
     --muted: #6b7280;
     --border: rgba(0,0,0,.08);
@@ -49,6 +49,7 @@ body {
 /* Navbar minimal tweaks */
 .navbar {
     backdrop-filter: saturate(180%) blur(8px);
+    background: rgba(255,255,255,.92) !important; /* hafif ton */
 }
 
     .navbar .nav-link {
@@ -105,13 +106,27 @@ a {
 /* Footer: subtle */
 footer.footer,
 footer {
-    background: #fff;
+    background: #fafbfc; /* saf beyaz yerine hafif ton */
 }
+
+/* ===== Dashboard soft selection ===== */
+
+/* ===== Dashboard active (SOFT BLUE, WHITE TEXT) ===== */
+
+/* (Not: Bu blok aþaðýda "Strong Blue" blok ile birleþtirildi, burada çakýþma olmasýn diye final ayar tek yerde.) */
+
+/* Saðdaki icon*
+
+
+
+ /* ############################################### */
+
 
 /* Options Start */
 .table tbody tr:hover {
     background: rgba(0,0,0,.02);
 }
+
 .form-label {
     font-weight: 600;
 }
@@ -120,5 +135,94 @@ hr {
     border-color: rgba(0,0,0,.08);
 }
 
+/* Bu satýr active border'ý beyazlatýyordu ve okunurluðu bozuyordu.
+   Soft selection ile uyumlu olacak þekilde border rengi zaten yukarýda ayarlý. */
+/* .list-group-item.active {
+    border-color: rgba(255,255,255,.25);
+} */
+
+.card .border-bottom {
+    border-color: rgba(0,0,0,.06) !important;
+}
+
+.dropdown-menu {
+    border: 1px solid rgba(0,0,0,.08);
+    border-radius: 12px;
+}
+
+.dropdown-item:active {
+    background: rgba(0,0,0,.06);
+    color: inherit;
+}
+
+.navbar .nav-link {
+    border-radius: 10px;
+    padding: .45rem .75rem;
+}
+
+    .navbar .nav-link:hover {
+        background: rgba(0,0,0,.04);
+    }
 
 /* Options End */
+
+
+/* ===== Dashboard Active: Strong Blue + White Text/Icons ===== */
+
+/* Seçili olmayan list item'lar çok beyaz kalmasýn */
+.list-group-item {
+    background: rgba(255,255,255,.60);
+    border-color: rgba(0,0,0,.06);
+}
+
+    .list-group-item:hover {
+        background: rgba(13,110,253,.05);
+    }
+
+    /* ACTIVE: eski mavi + beyaz yazý + beyaz ikon */
+    .list-group-item.active {
+        background: #0d6efd !important;
+        border-color: #0d6efd !important;
+        color: #ffffff !important;
+    }
+
+        .list-group-item.active h6,
+        .list-group-item.active span,
+        .list-group-item.active small,
+        .list-group-item.active .text-dark,
+        .list-group-item.active .text-muted,
+        .list-group-item.active .fw-semibold {
+            color: #ffffff !important;
+        }
+
+        .list-group-item.active i,
+        .list-group-item.active .bi {
+            color: #ffffff !important;
+        }
+
+        .list-group-item.active .btn,
+        .list-group-item.active a.btn {
+            background: rgba(255,255,255,.14) !important;
+            border-color: rgba(255,255,255,.35) !important;
+            color: #ffffff !important;
+        }
+
+            .list-group-item.active .btn i,
+            .list-group-item.active .btn .bi {
+                color: #ffffff !important;
+            }
+
+        .list-group-item.active:hover {
+            background: #0b5ed7 !important;
+            border-color: #0b5ed7 !important;
+        }
+
+        .list-group-item.active .badge {
+            background: rgba(255,255,255,.18) !important;
+            color: #ffffff !important;
+            border: 1px solid rgba(255,255,255,.28) !important;
+        }
+
+        .list-group-item.active::before {
+            background: rgba(255,255,255,.85) !important;
+        }
