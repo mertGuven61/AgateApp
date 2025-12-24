@@ -14,21 +14,52 @@
                 <div class="card-header bg-primary text-white">
                     <h5 class="mb-0"><i class="bi bi-building"></i> Clients</h5>
                 </div>
+
                 <div class="list-group list-group-flush">
+                    @if (Model.Clients.Count == 0)
+                    {
+                        <div class="p-3 text-muted text-center">No clients assigned.</div>
+                    }
+
                     @foreach (var client in Model.Clients)
                     {
                         string activeClass = (client.Id == Model.SelectedClientId) ? "active" : "";
+                        string textColor = (client.Id == Model.SelectedClientId) ? "text-white" : "text-dark";
 
                         <a asp-action="Index"
                            asp-route-clientId="@client.Id"
-                           class="list-group-item list-group-item-action @activeClass">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h6 class="mb-1">@client.CompanyName</h6>
-                            </div>
-                            <small>@client.City</small>
+                           class="list-group-item list-group-item-action d-flex justify-content-between align-items-center @activeClass">
+
+                            <span class="@textColor">
+                                <i class="bi bi-briefcase me-2"></i> @client.CompanyName
+                            </span>
+
+                            <!-- Admin veya ClientContact ise Detay Butonu -->
+                            @if (User.IsInRole("Admin") || User.IsInRole("ClientContact"))
+                            {
+                                <span class="badge rounded-pill bg-light text-dark border">
+                                    Edit <i class="bi bi-pencil-square"></i>
+                                </span>
+                            }
+                            else
+                            {
+                                <i class="bi bi-chevron-right @textColor"></i>
+                            }
                         </a>
                     }
                 </div>
+
+                <!-- YENİ EKLENEN KISIM: Add Client Butonu -->
+                @if (User.IsInRole("Admin") || User.IsInRole("ClientContact"))
+                {
+                    <div class="card-body border-top">
+                        <a asp-controller="Clients"
+                           asp-action="Create"
+                           class="btn btn-sm btn-outline-primary w-100">
+                            <i class="bi bi-person-plus-fill"></i> Add a Client
+                        </a>
+                    </div>
+                }
             </div>
         </div>
 
