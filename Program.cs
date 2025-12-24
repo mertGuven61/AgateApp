@@ -1,33 +1,34 @@
-using AgateApp.Data;
+ï»¿using AgateApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Veritabaný Baðlantýsý
+// 1. Veritabanï¿½ Baï¿½lantï¿½sï¿½
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-	?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
 builder.Services.AddDbContext<AgateDbContext>(options =>
-	options.UseSqlServer(connectionString));
+    options.UseSqlServer(connectionString));
 
 // 2. Identity (Kimlik) Servisinin Eklenmesi (MANUEL EKLEME)
-// Admin ve Staff rolleri olacaðý için .AddRoles<IdentityRole>() ekliyoruz.
+// Admin ve Staff rolleri olacaï¿½ï¿½ iï¿½in .AddRoles<IdentityRole>() ekliyoruz.
 builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 {
-	// Þifre kurallarýný basitleþtiriyoruz (Test kolaylýðý için)
-	options.SignIn.RequireConfirmedAccount = false;
-	options.Password.RequireDigit = false;
-	options.Password.RequireLowercase = false;
-	options.Password.RequireNonAlphanumeric = false;
-	options.Password.RequireUppercase = false;
-	options.Password.RequiredLength = 3; // En az 3 karakter þifre
+    // ï¿½ifre kurallarï¿½nï¿½ basitleï¿½tiriyoruz (Test kolaylï¿½ï¿½ï¿½ iï¿½in)
+    options.SignIn.RequireConfirmedAccount = false;
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequiredLength = 3; // En az 3 karakter ï¿½ifre
 })
-	.AddRoles<IdentityRole>() // Rolleri aktif et
-	.AddEntityFrameworkStores<AgateDbContext>();
+    .AddRoles<IdentityRole>() // Rolleri aktif et
+    .AddEntityFrameworkStores<AgateDbContext>();
 
 builder.Services.AddControllersWithViews();
 
+<<<<<<< HEAD
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
 builder.Services.AddControllersWithViews()
@@ -37,20 +38,25 @@ builder.Services.AddControllersWithViews()
 
 var supportedCultures = new[] { "en-US", "tr-TR" };
 var localizationOptions = new RequestLocalizationOptions()
-	.SetDefaultCulture("tr-TR") // Varsayýlan dil
+	.SetDefaultCulture("tr-TR") // Varsayï¿½lan dil
 	.AddSupportedCultures(supportedCultures)
 	.AddSupportedUICultures(supportedCultures);
 
 
 
+=======
+// Groq API Servisi (En hÄ±zlÄ± ve gÃ¼venilir)
+builder.Services.AddHttpClient<AgateApp.Services.GroqService>();
+builder.Services.AddScoped<AgateApp.Services.GroqService>();
+>>>>>>> dc671e97b1bd370e7fd3d4ae8b604e88197d8233
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-	app.UseExceptionHandler("/Home/Error");
-	app.UseHsts();
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
 }
 
 app.UseHttpsRedirection();
@@ -58,32 +64,38 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+<<<<<<< HEAD
 app.UseRequestLocalization(localizationOptions);
-// 3. Kimlik Doðrulama Sýrasý (Önemli!)
-app.UseAuthentication(); // Önce: Kimsin?
-app.UseAuthorization();  // Sonra: Yetkin var mý?
+// 3. Kimlik Doï¿½rulama Sï¿½rasï¿½ (ï¿½nemli!)
+app.UseAuthentication(); // ï¿½nce: Kimsin?
+app.UseAuthorization();  // Sonra: Yetkin var mï¿½?
+=======
+// 3. Kimlik Doï¿½rulama Sï¿½rasï¿½ (ï¿½nemli!)
+app.UseAuthentication(); // ï¿½nce: Kimsin?
+app.UseAuthorization();  // Sonra: Yetkin var mï¿½?
+>>>>>>> dc671e97b1bd370e7fd3d4ae8b604e88197d8233
 
 app.MapControllerRoute(
-	name: "default",
-	pattern: "{controller=Dashboard}/{action=Index}/{id?}"); // Açýlýþ sayfasý Dashboard
+    name: "default",
+    pattern: "{controller=Dashboard}/{action=Index}/{id?}"); // Aï¿½ï¿½lï¿½ï¿½ sayfasï¿½ Dashboard
 
-app.MapRazorPages(); // Identity sayfalarý (Login/Register) için gerekli
+app.MapRazorPages(); // Identity sayfalarï¿½ (Login/Register) iï¿½in gerekli
 
-// --- BAÞLANGIÇ VERÝLERÝNÝ (Admin/Staff) YÜKLEME ---
-// Bu kýsým veritabanýnda Admin kullanýcýsý yoksa oluþturur
+// --- BAï¿½LANGIï¿½ VERï¿½LERï¿½Nï¿½ (Admin/Staff) Yï¿½KLEME ---
+// Bu kï¿½sï¿½m veritabanï¿½nda Admin kullanï¿½cï¿½sï¿½ yoksa oluï¿½turur
 using (var scope = app.Services.CreateScope())
 {
-	var services = scope.ServiceProvider;
-	try
-	{
-		// Birazdan oluþturacaðýmýz RoleInitializer sýnýfýný çaðýrýyoruz
-		await AgateApp.Data.RoleInitializer.InitializeAsync(services);
-	}
-	catch (Exception ex)
-	{
-		var logger = services.GetRequiredService<ILogger<Program>>();
-		logger.LogError(ex, "An error occurred while seeding the database.");
-	}
+    var services = scope.ServiceProvider;
+    try
+    {
+        // Birazdan oluï¿½turacaï¿½ï¿½mï¿½z RoleInitializer sï¿½nï¿½fï¿½nï¿½ ï¿½aï¿½ï¿½rï¿½yoruz
+        await AgateApp.Data.RoleInitializer.InitializeAsync(services);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while seeding the database.");
+    }
 }
 // -------------------------------------
 
