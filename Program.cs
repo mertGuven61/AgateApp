@@ -28,6 +28,22 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+builder.Services.AddControllersWithViews()
+	.AddViewLocalization()
+	.AddDataAnnotationsLocalization();
+
+
+var supportedCultures = new[] { "en-US", "tr-TR" };
+var localizationOptions = new RequestLocalizationOptions()
+	.SetDefaultCulture("tr-TR") // Varsayýlan dil
+	.AddSupportedCultures(supportedCultures)
+	.AddSupportedUICultures(supportedCultures);
+
+
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -42,6 +58,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseRequestLocalization(localizationOptions);
 // 3. Kimlik Doðrulama Sýrasý (Önemli!)
 app.UseAuthentication(); // Önce: Kimsin?
 app.UseAuthorization();  // Sonra: Yetkin var mý?
