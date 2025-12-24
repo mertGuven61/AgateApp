@@ -1,22 +1,124 @@
+/* Base sizing */
 html {
-  font-size: 14px;
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+/* Keep bootstrap-like focus ring (safe) */
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
-html {
-  position: relative;
-  min-height: 100%;
+/* --- Minimal / Light theme --- */
+:root {
+    --bg: #f7f7f8;
+    --card: #ffffff;
+    --text: #111827;
+    --muted: #6b7280;
+    --border: rgba(0,0,0,.08);
 }
 
+/* Make footer stick to bottom without margin hacks */
 body {
-  margin-bottom: 60px;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: var(--text);
+    background: var(--bg);
 }
+
+/* Main wrapper (your Layout uses .app-bg) */
+.app-bg {
+    background: var(--bg);
+    flex: 1; /* pushes footer down */
+    padding-bottom: 0; /* keep clean */
+}
+
+/* Navbar minimal tweaks */
+.navbar {
+    backdrop-filter: saturate(180%) blur(8px);
+}
+
+    .navbar .nav-link {
+        color: rgba(17,24,39,.78) !important;
+    }
+
+        .navbar .nav-link:hover {
+            color: rgba(17,24,39,1) !important;
+        }
+
+    .navbar .navbar-brand {
+        letter-spacing: .2px;
+    }
+
+/* Content card wrapper */
+.content-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.04);
+}
+
+/* Buttons slightly softer */
+.btn {
+    border-radius: 10px;
+}
+
+/* Links (optional but nice) */
+a {
+    text-decoration: none;
+}
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+/* Tables cleaner */
+.table {
+    --bs-table-bg: transparent;
+}
+
+    .table thead th {
+        color: var(--muted);
+        font-weight: 600;
+    }
+
+/* Forms */
+.form-control,
+.form-select {
+    border-radius: 10px;
+}
+
+/* Footer: subtle */
+footer.footer,
+footer {
+    background: #fff;
+}
+
+/* Options Start */
+.table tbody tr:hover {
+    background: rgba(0,0,0,.02);
+}
+.form-label {
+    font-weight: 600;
+}
+
+hr {
+    border-color: rgba(0,0,0,.08);
+}
+
+
+/* Options End */

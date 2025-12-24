@@ -4,93 +4,108 @@
     ViewData["Title"] = "Project Dashboard";
 }
 
-<div class="container-fluid">
-    <h1 class="mb-4">Project Dashboard</h1>
+<div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+        <h1 class="h4 mb-1">Project Dashboard</h1>
+        <div class="text-muted small">Clients → Campaigns → Adverts</div>
+    </div>
+</div>
 
-    <div class="row">
-        <!-- 1. SÜTUN: MÜŞTERİLER (CLIENTS) -->
-        <div class="col-md-4">
-            <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0"><i class="bi bi-building"></i> Clients</h5>
+<div class="row g-3">
+
+    <!-- 1) CLIENTS -->
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body pb-2">
+                <div class="d-flex align-items-center justify-content-between">
+                    <h2 class="h6 mb-0">
+                        <i class="bi bi-building me-2"></i> Clients
+                    </h2>
+                    <span class="badge text-bg-light border">@Model.Clients.Count</span>
+                </div>
+            </div>
+
+            <div class="list-group list-group-flush">
+                @if (Model.Clients.Count == 0)
+                {
+                    <div class="p-3 text-muted text-center small">No clients assigned.</div>
+                }
+
+                @foreach (var client in Model.Clients)
+                {
+                    string activeClass = (client.Id == Model.SelectedClientId) ? "active" : "";
+                    string textColor = (client.Id == Model.SelectedClientId) ? "text-white" : "text-body";
+
+                    <a asp-action="Index"
+                       asp-route-clientId="@client.Id"
+                       class="list-group-item list-group-item-action d-flex justify-content-between align-items-center @activeClass">
+
+                        <span class="@textColor">
+                            <i class="bi bi-briefcase me-2"></i> @client.CompanyName
+                        </span>
+
+                        @if (User.IsInRole("Admin") || User.IsInRole("ClientContact"))
+                        {
+                            <span class="badge rounded-pill bg-light text-dark border">
+                                Edit <i class="bi bi-pencil-square"></i>
+                            </span>
+                        }
+                        else
+                        {
+                            <i class="bi bi-chevron-right @textColor"></i>
+                        }
+                    </a>
+                }
+            </div>
+
+            @if (User.IsInRole("Admin") || User.IsInRole("ClientContact"))
+            {
+                <div class="card-body border-top">
+                    <a asp-controller="Clients"
+                       asp-action="Create"
+                       class="btn btn-sm btn-outline-primary w-100">
+                        <i class="bi bi-person-plus-fill"></i> Add a Client
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- 2) CAMPAIGNS -->
+    <div class="col-lg-4">
+        @if (Model.SelectedClientId.HasValue)
+        {
+            <div class="card border-0 shadow-sm">
+                <div class="card-body pb-2">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <h2 class="h6 mb-0">
+                            <i class="bi bi-kanban me-2"></i> Campaigns
+                        </h2>
+                        <span class="badge text-bg-light border">@Model.Campaigns.Count</span>
+                    </div>
                 </div>
 
                 <div class="list-group list-group-flush">
-                    @if (Model.Clients.Count == 0)
+                    @if (Model.Campaigns.Count == 0)
                     {
-                        <div class="p-3 text-muted text-center">No clients assigned.</div>
+                        <div class="p-3 text-muted text-center small">No campaigns found.</div>
                     }
 
-                    @foreach (var client in Model.Clients)
+                    @foreach (var campaign in Model.Campaigns)
                     {
-                        string activeClass = (client.Id == Model.SelectedClientId) ? "active" : "";
-                        string textColor = (client.Id == Model.SelectedClientId) ? "text-white" : "text-dark";
+                        string activeClass = (campaign.Id == Model.SelectedCampaignId) ? "active" : "";
+                        string textColor = (campaign.Id == Model.SelectedCampaignId) ? "text-white" : "text-body";
 
-                        <a asp-action="Index"
-                           asp-route-clientId="@client.Id"
-                           class="list-group-item list-group-item-action d-flex justify-content-between align-items-center @activeClass">
+                        <div class="list-group-item p-0 d-flex justify-content-between align-items-center @activeClass">
 
-                            <span class="@textColor">
-                                <i class="bi bi-briefcase me-2"></i> @client.CompanyName
-                            </span>
+                            <a asp-action="Index"
+                               asp-route-clientId="@Model.SelectedClientId"
+                               asp-route-campaignId="@campaign.Id"
+                               class="flex-grow-1 p-3 text-decoration-none @textColor">
 
-                            <!-- Admin veya ClientContact ise Detay Butonu -->
-                            @if (User.IsInRole("Admin") || User.IsInRole("ClientContact"))
-                            {
-                                <span class="badge rounded-pill bg-light text-dark border">
-                                    Edit <i class="bi bi-pencil-square"></i>
-                                </span>
-                            }
-                            else
-                            {
-                                <i class="bi bi-chevron-right @textColor"></i>
-                            }
-                        </a>
-                    }
-                </div>
-
-                <!-- YENİ EKLENEN KISIM: Add Client Butonu -->
-                @if (User.IsInRole("Admin") || User.IsInRole("ClientContact"))
-                {
-                    <div class="card-body border-top">
-                        <a asp-controller="Clients"
-                           asp-action="Create"
-                           class="btn btn-sm btn-outline-primary w-100">
-                            <i class="bi bi-person-plus-fill"></i> Add a Client
-                        </a>
-                    </div>
-                }
-            </div>
-        </div>
-
-        <!-- 2. SÜTUN: KAMPANYALAR (CAMPAIGNS) -->
-        <div class="col-md-4">
-            @if (Model.SelectedClientId.HasValue)
-            {
-                <div class="card shadow-sm">
-                    <div class="card-header bg-success text-white">
-                        <h5 class="mb-0"><i class="bi bi-kanban"></i> Campaigns</h5>
-                    </div>
-                    <div class="list-group list-group-flush">
-                        @if (Model.Campaigns.Count == 0)
-                        {
-                            <div class="p-3 text-muted text-center">No campaigns found.</div>
-                        }
-
-                        @foreach (var campaign in Model.Campaigns)
-                        {
-                            string activeClass = (campaign.Id == Model.SelectedCampaignId) ? "active" : "";
-                            string textColor = (campaign.Id == Model.SelectedCampaignId) ? "text-white" : "text-dark";
-
-                            <div class="list-group-item p-0 d-flex justify-content-between align-items-center @activeClass">
-
-                                <a asp-action="Index"
-                                   asp-route-clientId="@Model.SelectedClientId"
-                                   asp-route-campaignId="@campaign.Id"
-                                   class="flex-grow-1 p-3 text-decoration-none @textColor">
+                                <div class="d-flex align-items-start justify-content-between gap-2">
                                     <h6 class="mb-1">@campaign.Title</h6>
 
-                                    <!-- Ödeme Durumu Göstergesi -->
                                     @if (campaign.AmountPaid >= campaign.ActualCost && campaign.ActualCost > 0)
                                     {
                                         <span class="badge bg-light text-success border border-success">Paid</span>
@@ -103,130 +118,141 @@
                                     {
                                         <span class="badge bg-light text-secondary border">Unpaid</span>
                                     }
-                                </a>
+                                </div>
 
-                                <div class="p-2 d-flex">
+                                <div class="text-muted small mt-1">
+                                    <i class="bi bi-person-check me-1"></i>
+                                    Campaign
+                                </div>
+                            </a>
 
-                                    <!-- 1. YÖNETİCİ BUTONLARI (Admin & Manager) -->
-                                    @if (User.IsInRole("Admin") || User.IsInRole("CampaignManager"))
+                            <div class="p-2 d-flex align-items-center gap-1">
+
+                                @if (User.IsInRole("Admin") || User.IsInRole("CampaignManager"))
+                                {
+                                    <a asp-controller="Campaigns"
+                                       asp-action="Details"
+                                       asp-route-id="@campaign.Id"
+                                       class="btn btn-sm btn-outline-secondary"
+                                       title="Details">
+                                        <i class="bi bi-info-circle"></i>
+                                    </a>
+
+                                    <a asp-controller="Campaigns"
+                                       asp-action="AssignStaff"
+                                       asp-route-id="@campaign.Id"
+                                       class="btn btn-sm btn-outline-secondary"
+                                       title="Assign Staff">
+                                        <i class="bi bi-people"></i>
+                                    </a>
+                                }
+
+                                @if (User.IsInRole("Admin") || User.IsInRole("ClientContact"))
+                                {
+                                    <a asp-controller="Campaigns"
+                                       asp-action="UpdatePayment"
+                                       asp-route-id="@campaign.Id"
+                                       class="btn btn-sm btn-outline-success"
+                                       title="Record Payment">
+                                        <i class="bi bi-currency-dollar"></i>
+                                    </a>
+                                }
+
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                @if (User.IsInRole("Admin") || User.IsInRole("CampaignManager"))
+                {
+                    <div class="card-body border-top">
+                        <a asp-controller="Campaigns"
+                           asp-action="Create"
+                           asp-route-clientId="@Model.SelectedClientId"
+                           class="btn btn-sm btn-outline-primary w-100">
+                            <i class="bi bi-plus-circle"></i> New Campaign
+                        </a>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-light border mb-0">
+                <i class="bi bi-arrow-left"></i> Select a client to view campaigns.
+            </div>
+        }
+    </div>
+
+    <!-- 3) ADVERTS -->
+    <div class="col-lg-4">
+        @if (Model.SelectedCampaignId.HasValue)
+        {
+            <div class="card border-0 shadow-sm">
+                <div class="card-body pb-2">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <h2 class="h6 mb-0">
+                            <i class="bi bi-megaphone me-2"></i> Adverts
+                        </h2>
+                        <span class="badge text-bg-light border">@Model.Adverts.Count</span>
+                    </div>
+                </div>
+
+                <div class="card-body pt-0">
+                    @if (Model.Adverts.Count == 0)
+                    {
+                        <div class="text-muted text-center small py-3">No adverts yet.</div>
+                    }
+                    else
+                    {
+                        <div class="list-group list-group-flush">
+                            @foreach (var advert in Model.Adverts)
+                            {
+                                <div class="list-group-item px-0 d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1 me-2">
+                                        <h6 class="mb-1">@advert.Title</h6>
+                                        <div class="text-muted small">
+                                            Status: @advert.ProductionStatus
+                                            <span class="mx-1">•</span>
+                                            @advert.MediaChannel
+                                        </div>
+                                    </div>
+
+                                    @if (User.IsInRole("Admin") || User.IsInRole("CampaignManager") || User.IsInRole("Staff"))
                                     {
-                                        <a asp-controller="Campaigns"
+                                        <a asp-controller="Adverts"
                                            asp-action="Details"
-                                           asp-route-id="@campaign.Id"
-                                           class="btn btn-sm btn-info shadow-sm me-1" title="Details"><i class="bi bi-info-circle-fill"></i></a>
-
-                                        <a asp-controller="Campaigns"
-                                           asp-action="AssignStaff"
-                                           asp-route-id="@campaign.Id"
-                                           class="btn btn-sm btn-warning shadow-sm" title="Assign Staff"><i class="bi bi-people-fill"></i></a>
-                                    }
-
-                                    <!-- 2. FİNANS BUTONU (Sadece Admin & ClientContact) -->
-                                    @if (User.IsInRole("Admin") || User.IsInRole("ClientContact"))
-                                    {
-                                        <a asp-controller="Campaigns"
-                                           asp-action="UpdatePayment"
-                                           asp-route-id="@campaign.Id"
-                                           class="btn btn-sm btn-success shadow-sm ms-1"
-                                           title="Record Payment">
-                                            <i class="bi bi-currency-dollar"></i>
+                                           asp-route-id="@advert.Id"
+                                           class="btn btn-sm btn-outline-secondary"
+                                           title="Details">
+                                            <i class="bi bi-info-circle"></i>
                                         </a>
                                     }
-
                                 </div>
-                            </div>
-                        }
-                    </div>
+                            }
+                        </div>
+                    }
 
-                    <!-- Yeni Kampanya Butonu -->
                     @if (User.IsInRole("Admin") || User.IsInRole("CampaignManager"))
                     {
-                        <div class="card-body border-top">
-                            <a asp-controller="Campaigns"
+                        <div class="pt-3">
+                            <a asp-controller="Adverts"
                                asp-action="Create"
-                               asp-route-clientId="@Model.SelectedClientId"
-                               class="btn btn-sm btn-outline-success w-100">
-                                <i class="bi bi-plus-circle"></i> New Campaign
+                               asp-route-campaignId="@Model.SelectedCampaignId"
+                               class="btn btn-sm btn-outline-primary w-100">
+                                <i class="bi bi-plus-circle"></i> New Advert
                             </a>
                         </div>
                     }
                 </div>
-            }
-            else
-            {
-                <div class="alert alert-info shadow-sm">
-                    <i class="bi bi-arrow-left"></i> Select a client to view campaigns.
-                </div>
-            }
-        </div>
-
-        <!-- 3. SÜTUN: REKLAMLAR (ADVERTS) -->
-        <div class="col-md-4">
-            @if (Model.SelectedCampaignId.HasValue)
-            {
-                <div class="card shadow-sm">
-                    <div class="card-header bg-info text-white">
-                        <h5 class="mb-0"><i class="bi bi-megaphone"></i> Adverts</h5>
-                    </div>
-                    <div class="card-body">
-                        @if (Model.Adverts.Count == 0)
-                        {
-                            <p class="text-muted text-center">No adverts yet.</p>
-                        }
-                        else
-                        {
-                            <div class="list-group list-group-flush mb-3">
-                                @foreach (var advert in Model.Adverts)
-                                {
-                                    <!-- List item'ı flex yaptık: Sola bilgiler, sağa buton gelecek -->
-                                    <div class="list-group-item px-0 d-flex justify-content-between align-items-center">
-
-                                        <!-- SOL TARAFA: Advert Bilgileri -->
-                                        <div class="flex-grow-1 me-2">
-                                            <div class="d-flex w-100 justify-content-between">
-                                                <h6 class="mb-1">@advert.Title</h6>
-                                            </div>
-                                            <small class="text-muted">Status: @advert.ProductionStatus | </small>
-                                            <small class="text-muted">@advert.MediaChannel</small>
-                                        </div>
-
-                                        @if (User.IsInRole("Admin") || User.IsInRole("CampaignManager") || User.IsInRole("Staff"))
-                                        {
-                                            <div>
-                                                <a asp-controller="Adverts"
-                                                   asp-action="Details"
-                                                   asp-route-id="@advert.Id"
-                                                   class="btn btn-sm btn-info shadow-sm"
-                                                   title="Details">
-                                                    <i class="bi bi-info-circle-fill"></i>
-                                                </a>
-                                            </div>
-                                        }
-
-                                    </div>
-                                }
-                            </div>
-                        }
-
-                        <!-- Yeni Reklam Butonu -->
-                        @if (User.IsInRole("Admin") || User.IsInRole("CampaignManager"))
-                        {
-                            <a asp-controller="Adverts"
-                               asp-action="Create"
-                               asp-route-campaignId="@Model.SelectedCampaignId"
-                               class="btn btn-sm btn-outline-info w-100">
-                                <i class="bi bi-plus-circle"></i> New Advert
-                            </a>
-                        }
-                    </div>
-                </div>
-            }
-            else if (Model.SelectedClientId.HasValue)
-            {
-                <div class="alert alert-secondary shadow-sm">
-                    <i class="bi bi-arrow-left"></i> Select a campaign to view details.
-                </div>
-            }
-        </div>
+            </div>
+        }
+        else if (Model.SelectedClientId.HasValue)
+        {
+            <div class="alert alert-light border mb-0">
+                <i class="bi bi-arrow-left"></i> Select a campaign to view details.
+            </div>
+        }
     </div>
+
 </div>

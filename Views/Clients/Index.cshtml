@@ -1,77 +1,119 @@
 @model IEnumerable<AgateApp.Models.Client>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Clients";
 }
 
-<h1>Clients</h1>
+<div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+        <h1 class="h4 mb-1">Clients</h1>
+        <div class="text-muted small">Company and contact directory.</div>
+    </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.CompanyName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AddressLine1)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AddressLine2)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.City)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PostalCode)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ContactPersonName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ContactEmail)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PhoneNumber)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.CompanyName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AddressLine1)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AddressLine2)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.City)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PostalCode)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ContactPersonName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ContactEmail)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PhoneNumber)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <a asp-action="Create" class="btn btn-primary btn-sm px-3">
+        <i class="bi bi-plus-circle me-1"></i> Create New
+    </a>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead class="border-bottom">
+                    <tr>
+                        <th class="ps-3">@Html.DisplayNameFor(model => model.CompanyName)</th>
+                        <th>@Html.DisplayNameFor(model => model.City)</th>
+                        <th>Address</th>
+                        <th>@Html.DisplayNameFor(model => model.PostalCode)</th>
+                        <th>@Html.DisplayNameFor(model => model.ContactPersonName)</th>
+                        <th>@Html.DisplayNameFor(model => model.ContactEmail)</th>
+                        <th>@Html.DisplayNameFor(model => model.PhoneNumber)</th>
+                        <th class="text-end pe-3">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="border-bottom">
+                            <td class="ps-3">
+                                <div class="fw-semibold">@Html.DisplayFor(modelItem => item.CompanyName)</div>
+                                <div class="text-muted small">ID: @item.Id</div>
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.City)
+                            </td>
+
+                            <td>
+                                <div class="text-muted small">
+                                    @Html.DisplayFor(modelItem => item.AddressLine1)
+                                    @if (!string.IsNullOrWhiteSpace(item.AddressLine2))
+                                    {
+                                        <span>, @Html.DisplayFor(modelItem => item.AddressLine2)</span>
+                                    }
+                                </div>
+                            </td>
+
+                            <td>
+                                <span class="text-muted small">
+                                    @Html.DisplayFor(modelItem => item.PostalCode)
+                                </span>
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ContactPersonName)
+                            </td>
+
+                            <td>
+                                <a class="text-decoration-none"
+                                   href="mailto:@item.ContactEmail">
+                                    @Html.DisplayFor(modelItem => item.ContactEmail)
+                                </a>
+                            </td>
+
+                            <td>
+                                <a class="text-decoration-none"
+                                   href="tel:@item.PhoneNumber">
+                                    @Html.DisplayFor(modelItem => item.PhoneNumber)
+                                </a>
+                            </td>
+
+                            <td class="text-end pe-3">
+                                <div class="d-inline-flex gap-1">
+                                    <a asp-action="Details"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-outline-secondary"
+                                       title="Details">
+                                        <i class="bi bi-info-circle"></i>
+                                    </a>
+
+                                    <a asp-action="Edit"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-outline-secondary"
+                                       title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+
+                                    <a asp-action="Delete"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-outline-danger"
+                                       title="Delete">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            @if (!Model.Any())
+            {
+                <div class="p-4 text-center text-muted small">
+                    No clients found.
+                </div>
+            }
+        </div>
+    </div>
+</div>
