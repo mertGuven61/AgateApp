@@ -1,13 +1,15 @@
 ﻿@model AgateApp.Models.DashboardViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<AgateApp.SharedResource> Localizer
 
 @{
-    ViewData["Title"] = "Dashboard";
+    ViewData["Title"] = Localizer["Dashboard"];
 
     var clientsCount = Model.Clients?.Count ?? 0;
     var campaignsCount = Model.Campaigns?.Count ?? 0;
     var advertsCount = Model.Adverts?.Count ?? 0;
 
-    // Payment summary (only for selected client's campaigns list in middle column)
+    // Payment summary
     var paidCount = 0;
     var partialCount = 0;
     var unpaidCount = 0;
@@ -25,9 +27,9 @@
 
 <div class="d-flex align-items-center justify-content-between mb-3">
     <div>
-        <h1 class="h4 mb-1">Project Dashboard</h1>
+        <h1 class="h4 mb-1">@Localizer["Dashboard"]</h1>
         <div class="text-muted small">
-            Manage clients, campaigns and adverts in one place.
+            @Localizer["Dashboard_Subtitle"]
         </div>
     </div>
 
@@ -35,7 +37,7 @@
         @if (User.IsInRole("Admin") || User.IsInRole("ClientContact"))
         {
             <a asp-controller="Clients" asp-action="Create" class="btn btn-sm btn-primary">
-                <i class="bi bi-person-plus me-1"></i> New Client
+                <i class="bi bi-person-plus me-1"></i> @Localizer["Btn_AddClient"]
             </a>
         }
 
@@ -45,7 +47,7 @@
                asp-action="Create"
                asp-route-clientId="@Model.SelectedClientId"
                class="btn btn-sm btn-outline-secondary">
-                <i class="bi bi-plus-circle me-1"></i> New Campaign
+                <i class="bi bi-plus-circle me-1"></i> @Localizer["Btn_NewCampaign"]
             </a>
         }
 
@@ -55,7 +57,7 @@
                asp-action="Create"
                asp-route-campaignId="@Model.SelectedCampaignId"
                class="btn btn-sm btn-outline-secondary">
-                <i class="bi bi-plus-circle me-1"></i> New Advert
+                <i class="bi bi-plus-circle me-1"></i> @Localizer["Btn_NewAdvert"]
             </a>
         }
     </div>
@@ -68,14 +70,14 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
-                        <div class="text-muted small">Clients</div>
+                        <div class="text-muted small">@Localizer["Col_Clients"]</div>
                         <div class="h4 mb-0">@clientsCount</div>
                     </div>
                     <div class="text-muted">
                         <i class="bi bi-building fs-4"></i>
                     </div>
                 </div>
-                <div class="text-muted small mt-2">Assigned to you</div>
+                <div class="text-muted small mt-2">@Localizer["Assigned_To_You"]</div>
             </div>
         </div>
     </div>
@@ -85,7 +87,7 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
-                        <div class="text-muted small">Campaigns</div>
+                        <div class="text-muted small">@Localizer["Col_Campaigns"]</div>
                         <div class="h4 mb-0">@campaignsCount</div>
                     </div>
                     <div class="text-muted">
@@ -95,11 +97,11 @@
                 <div class="text-muted small mt-2">
                     @if (Model.SelectedClientId.HasValue)
                     {
-                        <span>For selected client</span>
+                        <span>@Localizer["For_Selected_Client"]</span>
                     }
                     else
                     {
-                        <span>Select a client</span>
+                        <span>@Localizer["Select_Client_Short"]</span>
                     }
                 </div>
             </div>
@@ -111,7 +113,7 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
-                        <div class="text-muted small">Adverts</div>
+                        <div class="text-muted small">@Localizer["Col_Adverts"]</div>
                         <div class="h4 mb-0">@advertsCount</div>
                     </div>
                     <div class="text-muted">
@@ -121,11 +123,11 @@
                 <div class="text-muted small mt-2">
                     @if (Model.SelectedCampaignId.HasValue)
                     {
-                        <span>For selected campaign</span>
+                        <span>@Localizer["For_Selected_Campaign"]</span>
                     }
                     else
                     {
-                        <span>Select a campaign</span>
+                        <span>@Localizer["Select_Campaign_Short"]</span>
                     }
                 </div>
             </div>
@@ -137,11 +139,11 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
-                        <div class="text-muted small">Payment Status</div>
+                        <div class="text-muted small">@Localizer["Payment_Status"]</div>
                         <div class="h6 mb-0">
-                            <span class="badge bg-light text-success border me-1">Paid: @paidCount</span>
-                            <span class="badge bg-light text-warning border me-1">Partial: @partialCount</span>
-                            <span class="badge bg-light text-secondary border">Unpaid: @unpaidCount</span>
+                            <span class="badge bg-light text-success border me-1">@Localizer["Status_Paid"]: @paidCount</span>
+                            <span class="badge bg-light text-warning border me-1">@Localizer["Status_PartiallyPaid"]: @partialCount</span>
+                            <span class="badge bg-light text-secondary border">@Localizer["Status_Unpaid"]: @unpaidCount</span>
                         </div>
                     </div>
                     <div class="text-muted">
@@ -149,7 +151,7 @@
                     </div>
                 </div>
                 <div class="text-muted small mt-2">
-                    Based on listed campaigns
+                    @Localizer["Payment_Based_On"]
                 </div>
             </div>
         </div>
@@ -164,13 +166,13 @@
             <div class="card-body p-0">
                 <div class="p-3 border-bottom d-flex align-items-center justify-content-between">
                     <div class="fw-semibold">
-                        <i class="bi bi-building me-2 text-muted"></i> Clients
+                        <i class="bi bi-building me-2 text-muted"></i> @Localizer["Col_Clients"]
                     </div>
 
                     @if (User.IsInRole("Admin") || User.IsInRole("ClientContact"))
                     {
                         <a asp-controller="Clients" asp-action="Index" class="btn btn-sm btn-outline-secondary">
-                            View All
+                            @Localizer["Btn_ViewAll"]
                         </a>
                     }
                 </div>
@@ -180,7 +182,7 @@
                     {
                         <div class="p-4 text-center text-muted small">
                             <i class="bi bi-inboxes fs-3 d-block mb-2"></i>
-                            No clients assigned.
+                            @Localizer["No_Clients"]
                         </div>
                     }
                     else
@@ -199,7 +201,7 @@
                                     <div>
                                         <div class="@textColor fw-semibold">@client.CompanyName</div>
                                         <div class="small @(client.Id == Model.SelectedClientId ? "text-white-50" : "text-muted")">
-                                            ID: @client.Id
+                                            @Localizer["Lbl_Id"]: @client.Id
                                         </div>
                                     </div>
                                 </div>
@@ -207,7 +209,7 @@
                                 @if (User.IsInRole("Admin") || User.IsInRole("ClientContact"))
                                 {
                                     <span class="badge rounded-pill bg-light text-dark border">
-                                        Edit <i class="bi bi-pencil-square"></i>
+                                        @Localizer["Btn_Edit"] <i class="bi bi-pencil-square"></i>
                                     </span>
                                 }
                                 else
@@ -223,7 +225,7 @@
                 {
                     <div class="p-3 border-top">
                         <a asp-controller="Clients" asp-action="Create" class="btn btn-sm btn-primary w-100">
-                            <i class="bi bi-person-plus-fill me-1"></i> Add a Client
+                            <i class="bi bi-person-plus-fill me-1"></i> @Localizer["Btn_AddClient"]
                         </a>
                     </div>
                 }
@@ -239,11 +241,11 @@
                 <div class="card-body p-0">
                     <div class="p-3 border-bottom d-flex align-items-center justify-content-between">
                         <div class="fw-semibold">
-                            <i class="bi bi-kanban me-2 text-muted"></i> Campaigns
+                            <i class="bi bi-kanban me-2 text-muted"></i> @Localizer["Col_Campaigns"]
                         </div>
 
                         <a asp-controller="Campaigns" asp-action="Index" class="btn btn-sm btn-outline-secondary">
-                            View All
+                            @Localizer["Btn_ViewAll"]
                         </a>
                     </div>
 
@@ -252,7 +254,7 @@
                         {
                             <div class="p-4 text-center text-muted small">
                                 <i class="bi bi-inboxes fs-3 d-block mb-2"></i>
-                                No campaigns found.
+                                @Localizer["No_Campaigns"]
                             </div>
                         }
                         else
@@ -271,22 +273,21 @@
                                             <div>
                                                 <div class="fw-semibold">@campaign.Title</div>
                                                 <div class="small @(campaign.Id == Model.SelectedCampaignId ? "text-white-50" : "text-muted")">
-                                                    Status: @campaign.Status
+                                                    @Localizer["Lbl_Status"]: @campaign.Status
                                                 </div>
                                             </div>
 
-                                            @* Payment badge *@
                                             @if (campaign.ActualCost > 0 && campaign.AmountPaid >= campaign.ActualCost)
                                             {
-                                                <span class="badge bg-light text-success border border-success">Paid</span>
+                                                <span class="badge bg-light text-success border border-success">@Localizer["Status_Paid"]</span>
                                             }
                                             else if (campaign.AmountPaid > 0)
                                             {
-                                                <span class="badge bg-light text-warning border border-warning">Partial</span>
+                                                <span class="badge bg-light text-warning border border-warning">@Localizer["Status_PartiallyPaid"]</span>
                                             }
                                             else
                                             {
-                                                <span class="badge bg-light text-secondary border">Unpaid</span>
+                                                <span class="badge bg-light text-secondary border">@Localizer["Status_Unpaid"]</span>
                                             }
                                         </div>
                                     </a>
@@ -298,7 +299,7 @@
                                                asp-action="Details"
                                                asp-route-id="@campaign.Id"
                                                class="btn btn-sm btn-outline-secondary me-1"
-                                               title="Details">
+                                               title="@Localizer["Btn_Details"]">
                                                 <i class="bi bi-info-circle"></i>
                                             </a>
 
@@ -306,7 +307,7 @@
                                                asp-action="AssignStaff"
                                                asp-route-id="@campaign.Id"
                                                class="btn btn-sm btn-outline-secondary"
-                                               title="Assign Staff">
+                                               title="@Localizer["Btn_AssignStaff"]">
                                                 <i class="bi bi-people"></i>
                                             </a>
                                         }
@@ -317,7 +318,7 @@
                                                asp-action="UpdatePayment"
                                                asp-route-id="@campaign.Id"
                                                class="btn btn-sm btn-primary ms-1"
-                                               title="Record Payment">
+                                               title="@Localizer["Btn_RecordPayment"]">
                                                 <i class="bi bi-cash-coin"></i>
                                             </a>
                                         }
@@ -334,7 +335,7 @@
                                asp-action="Create"
                                asp-route-clientId="@Model.SelectedClientId"
                                class="btn btn-sm btn-primary w-100">
-                                <i class="bi bi-plus-circle me-1"></i> New Campaign
+                                <i class="bi bi-plus-circle me-1"></i> @Localizer["Btn_NewCampaign"]
                             </a>
                         </div>
                     }
@@ -346,7 +347,7 @@
             <div class="card border-0 shadow-sm">
                 <div class="card-body text-center text-muted small py-5">
                     <i class="bi bi-arrow-left-circle fs-2 d-block mb-2"></i>
-                    Select a client to view campaigns.
+                    @Localizer["Select_Client"]
                 </div>
             </div>
         }
@@ -360,11 +361,11 @@
                 <div class="card-body p-0">
                     <div class="p-3 border-bottom d-flex align-items-center justify-content-between">
                         <div class="fw-semibold">
-                            <i class="bi bi-megaphone me-2 text-muted"></i> Adverts
+                            <i class="bi bi-megaphone me-2 text-muted"></i> @Localizer["Col_Adverts"]
                         </div>
 
                         <a asp-controller="Adverts" asp-action="Index" class="btn btn-sm btn-outline-secondary">
-                            View All
+                            @Localizer["Btn_ViewAll"]
                         </a>
                     </div>
 
@@ -373,7 +374,7 @@
                         {
                             <div class="text-center text-muted small py-4">
                                 <i class="bi bi-inboxes fs-3 d-block mb-2"></i>
-                                No adverts yet.
+                                @Localizer["No_Adverts"]
                             </div>
                         }
                         else
@@ -385,7 +386,7 @@
                                         <div class="flex-grow-1 me-2">
                                             <div class="fw-semibold">@advert.Title</div>
                                             <div class="text-muted small">
-                                                Status: @advert.ProductionStatus
+                                                @Localizer["Lbl_Status"]: @advert.ProductionStatus
                                                 <span class="mx-1">•</span>
                                                 @advert.MediaChannel
                                             </div>
@@ -397,7 +398,7 @@
                                                asp-action="Details"
                                                asp-route-id="@advert.Id"
                                                class="btn btn-sm btn-outline-secondary"
-                                               title="Details">
+                                               title="@Localizer["Btn_Details"]">
                                                 <i class="bi bi-info-circle"></i>
                                             </a>
                                         }
@@ -412,7 +413,7 @@
                                asp-action="Create"
                                asp-route-campaignId="@Model.SelectedCampaignId"
                                class="btn btn-sm btn-primary w-100 mt-3">
-                                <i class="bi bi-plus-circle me-1"></i> New Advert
+                                <i class="bi bi-plus-circle me-1"></i> @Localizer["Btn_NewAdvert"]
                             </a>
                         }
                     </div>
@@ -424,7 +425,7 @@
             <div class="card border-0 shadow-sm">
                 <div class="card-body text-center text-muted small py-5">
                     <i class="bi bi-arrow-left-circle fs-2 d-block mb-2"></i>
-                    Select a campaign to view adverts.
+                    @Localizer["Select_Campaign_To_View_Adverts"]
                 </div>
             </div>
         }
@@ -433,7 +434,7 @@
             <div class="card border-0 shadow-sm">
                 <div class="card-body text-center text-muted small py-5">
                     <i class="bi bi-arrow-left-circle fs-2 d-block mb-2"></i>
-                    Start by selecting a client.
+                    @Localizer["Start_By_Selecting_Client"]
                 </div>
             </div>
         }

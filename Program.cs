@@ -32,6 +32,21 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient<AgateApp.Services.GroqService>();
 builder.Services.AddScoped<AgateApp.Services.GroqService>();
 
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+// MVC View'larına Localization desteği ver
+builder.Services.AddControllersWithViews()
+	.AddViewLocalization()
+	.AddDataAnnotationsLocalization();
+
+// --- 2. MIDDLEWARE EKLEME (app.Build() sonrasına, app.Run() öncesine) ---
+
+var supportedCultures = new[] { "en-US", "tr-TR" };
+var localizationOptions = new RequestLocalizationOptions()
+	.SetDefaultCulture("tr-TR") // Varsayılan dil
+	.AddSupportedCultures(supportedCultures)
+	.AddSupportedUICultures(supportedCultures);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -45,6 +60,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseRequestLocalization(localizationOptions);
 
 // 3. Kimlik Do�rulama S�ras� (�nemli!)
 app.UseAuthentication(); // �nce: Kimsin?

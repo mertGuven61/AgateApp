@@ -98,4 +98,155 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+  <!-- GENERAL TERMS -->
+  <data name="App_Title" xml:space="preserve">
+    <value>Campaign Management System</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="Welcome" xml:space="preserve">
+    <value>Welcome</value>
+  </data>
+
+  <!-- DASHBOARD COLUMNS -->
+  <data name="Col_Clients" xml:space="preserve">
+    <value>Clients</value>
+  </data>
+  <data name="Col_Campaigns" xml:space="preserve">
+    <value>Campaigns</value>
+  </data>
+  <data name="Col_Adverts" xml:space="preserve">
+    <value>Adverts</value>
+  </data>
+  <data name="No_Clients" xml:space="preserve">
+    <value>No clients assigned.</value>
+  </data>
+  <data name="No_Campaigns" xml:space="preserve">
+    <value>No campaigns found.</value>
+  </data>
+  <data name="No_Adverts" xml:space="preserve">
+    <value>No adverts yet.</value>
+  </data>
+  <data name="Select_Client" xml:space="preserve">
+    <value>Select a client to view details.</value>
+  </data>
+
+  <!-- BUTTONS -->
+  <data name="Btn_AddClient" xml:space="preserve">
+    <value>Add a Client</value>
+  </data>
+  <data name="Btn_NewCampaign" xml:space="preserve">
+    <value>New Campaign</value>
+  </data>
+  <data name="Btn_NewAdvert" xml:space="preserve">
+    <value>New Advert</value>
+  </data>
+  <data name="Btn_Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="Btn_Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Btn_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Btn_AddNote" xml:space="preserve">
+    <value>Add Note</value>
+  </data>
+  <data name="Btn_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+
+  <!-- STATUS -->
+  <data name="Status_Paid" xml:space="preserve">
+    <value>Paid</value>
+  </data>
+  <data name="Status_PartiallyPaid" xml:space="preserve">
+    <value>Partially Paid</value>
+  </data>
+  <data name="Status_Unpaid" xml:space="preserve">
+    <value>Unpaid</value>
+  </data>
+  <data name="Prod_Completed" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="Prod_InProgress" xml:space="preserve">
+    <value>In Progress</value>
+  </data>
+  <data name="Prod_Pending" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+
+  <!-- FORM LABELS -->
+  <data name="Lbl_Title" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="Lbl_Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="Lbl_Budget" xml:space="preserve">
+    <value>Budget</value>
+  </data>
+  <data name="Lbl_Price" xml:space="preserve">
+    <value>Price</value>
+  </data>
+  <data name="Lbl_Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <!-- MISSING DASHBOARD TRANSLATIONS -->
+  <data name="Dashboard_Subtitle" xml:space="preserve">
+  <value>Manage clients, campaigns and adverts in one place.</value>
+</data>
+  <data name="Assigned_To_You" xml:space="preserve">
+  <value>Assigned to you</value>
+</data>
+  <data name="For_Selected_Client" xml:space="preserve">
+  <value>For selected client</value>
+</data>
+  <data name="Select_Client_Short" xml:space="preserve">
+  <value>Select a client</value>
+</data>
+  <data name="For_Selected_Campaign" xml:space="preserve">
+  <value>For selected campaign</value>
+</data>
+  <data name="Select_Campaign_Short" xml:space="preserve">
+  <value>Select a campaign</value>
+</data>
+  <data name="Payment_Status" xml:space="preserve">
+  <value>Payment Status</value>
+</data>
+  <data name="Payment_Based_On" xml:space="preserve">
+  <value>Based on listed campaigns</value>
+</data>
+  <data name="Btn_ViewAll" xml:space="preserve">
+  <value>View All</value>
+</data>
+  <data name="Lbl_Id" xml:space="preserve">
+  <value>ID</value>
+</data>
+  <data name="Lbl_Status" xml:space="preserve">
+  <value>Status</value>
+</data>
+  <data name="Btn_AssignStaff" xml:space="preserve">
+  <value>Assign Staff</value>
+</data>
+  <data name="Btn_RecordPayment" xml:space="preserve">
+  <value>Record Payment</value>
+</data>
+  <data name="Select_Campaign_To_View_Adverts" xml:space="preserve">
+  <value>Select a campaign to view adverts.</value>
+</data>
+  <data name="Start_By_Selecting_Client" xml:space="preserve">
+  <value>Start by selecting a client.</value>
+</data>
 </root>

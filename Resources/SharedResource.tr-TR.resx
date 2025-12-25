@@ -98,4 +98,155 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+  <!-- GENEL TERİMLER -->
+  <data name="App_Title" xml:space="preserve">
+    <value>Kampanya Yönetim Sistemi</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>Kontrol Paneli</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Ana Sayfa</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Giriş Yap</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Çıkış Yap</value>
+  </data>
+  <data name="Welcome" xml:space="preserve">
+    <value>Hoş Geldiniz</value>
+  </data>
+
+  <!-- DASHBOARD SÜTUNLARI -->
+  <data name="Col_Clients" xml:space="preserve">
+    <value>Müşteriler</value>
+  </data>
+  <data name="Col_Campaigns" xml:space="preserve">
+    <value>Kampanyalar</value>
+  </data>
+  <data name="Col_Adverts" xml:space="preserve">
+    <value>İlanlar</value>
+  </data>
+  <data name="No_Clients" xml:space="preserve">
+    <value>Kayıtlı müşteri yok.</value>
+  </data>
+  <data name="No_Campaigns" xml:space="preserve">
+    <value>Kampanya bulunamadı.</value>
+  </data>
+  <data name="No_Adverts" xml:space="preserve">
+    <value>Henüz ilan yok.</value>
+  </data>
+  <data name="Select_Client" xml:space="preserve">
+    <value>Detayları görmek için bir müşteri seçin.</value>
+  </data>
+
+  <!-- BUTONLAR -->
+  <data name="Btn_AddClient" xml:space="preserve">
+    <value>Müşteri Ekle</value>
+  </data>
+  <data name="Btn_NewCampaign" xml:space="preserve">
+    <value>Yeni Kampanya</value>
+  </data>
+  <data name="Btn_NewAdvert" xml:space="preserve">
+    <value>Yeni İlan</value>
+  </data>
+  <data name="Btn_Details" xml:space="preserve">
+    <value>Detaylar</value>
+  </data>
+  <data name="Btn_Edit" xml:space="preserve">
+    <value>Düzenle</value>
+  </data>
+  <data name="Btn_Delete" xml:space="preserve">
+    <value>Sil</value>
+  </data>
+  <data name="Btn_AddNote" xml:space="preserve">
+    <value>Not Ekle</value>
+  </data>
+  <data name="Btn_Save" xml:space="preserve">
+    <value>Kaydet</value>
+  </data>
+
+  <!-- DURUMLAR -->
+  <data name="Status_Paid" xml:space="preserve">
+    <value>Ödendi</value>
+  </data>
+  <data name="Status_PartiallyPaid" xml:space="preserve">
+    <value>Kısmi Ödendi</value>
+  </data>
+  <data name="Status_Unpaid" xml:space="preserve">
+    <value>Ödenmedi</value>
+  </data>
+  <data name="Prod_Completed" xml:space="preserve">
+    <value>Tamamlandı</value>
+  </data>
+  <data name="Prod_InProgress" xml:space="preserve">
+    <value>Devam Ediyor</value>
+  </data>
+  <data name="Prod_Pending" xml:space="preserve">
+    <value>Beklemede</value>
+  </data>
+
+  <!-- FORM ETİKETLERİ -->
+  <data name="Lbl_Title" xml:space="preserve">
+    <value>Başlık</value>
+  </data>
+  <data name="Lbl_Description" xml:space="preserve">
+    <value>Açıklama</value>
+  </data>
+  <data name="Lbl_Budget" xml:space="preserve">
+    <value>Bütçe</value>
+  </data>
+  <data name="Lbl_Price" xml:space="preserve">
+    <value>Fiyat</value>
+  </data>
+  <data name="Lbl_Date" xml:space="preserve">
+    <value>Tarih</value>
+  </data>
+  <!-- EKSİK KALAN DASHBOARD ÇEVİRİLERİ -->
+  <data name="Dashboard_Subtitle" xml:space="preserve">
+  <value>Müşterileri, kampanyaları ve ilanları tek bir yerden yönetin.</value>
+</data>
+  <data name="Assigned_To_You" xml:space="preserve">
+  <value>Sizin için atandı</value>
+</data>
+  <data name="For_Selected_Client" xml:space="preserve">
+  <value>Seçili müşteri için</value>
+</data>
+  <data name="Select_Client_Short" xml:space="preserve">
+  <value>Bir müşteri seçin</value>
+</data>
+  <data name="For_Selected_Campaign" xml:space="preserve">
+  <value>Seçili kampanya için</value>
+</data>
+  <data name="Select_Campaign_Short" xml:space="preserve">
+  <value>Bir kampanya seçin</value>
+</data>
+  <data name="Payment_Status" xml:space="preserve">
+  <value>Ödeme Durumu</value>
+</data>
+  <data name="Payment_Based_On" xml:space="preserve">
+  <value>Listelenen kampanyalara göre</value>
+</data>
+  <data name="Btn_ViewAll" xml:space="preserve">
+  <value>Tümünü Gör</value>
+</data>
+  <data name="Lbl_Id" xml:space="preserve">
+  <value>ID</value>
+</data>
+  <data name="Lbl_Status" xml:space="preserve">
+  <value>Durum</value>
+</data>
+  <data name="Btn_AssignStaff" xml:space="preserve">
+  <value>Personel Ata</value>
+</data>
+  <data name="Btn_RecordPayment" xml:space="preserve">
+  <value>Ödeme Kaydet</value>
+</data>
+  <data name="Select_Campaign_To_View_Adverts" xml:space="preserve">
+  <value>İlanları görmek için bir kampanya seçin.</value>
+</data>
+  <data name="Start_By_Selecting_Client" xml:space="preserve">
+  <value>Başlamak için bir müşteri seçin.</value>
+</data>
 </root>
